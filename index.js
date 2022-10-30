@@ -82,7 +82,7 @@ module.exports = (options) => {
       }
       htmlAttrsString = htmlAttrs.join(' ')
 
-      return `<${htmlTag} ${htmlAttrsString}>${label}</${htmlTag}>`
+      return `<${options.htmlTag} ${htmlAttrsString}>${label}</${options.htmlTag}>`
     }
   )
 }
