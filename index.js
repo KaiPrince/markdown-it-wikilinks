@@ -15,6 +15,7 @@ module.exports = (options) => {
     htmlAttributes: {
     },
     htmlTag: 'a',
+    hrefAttribute: 'href',
     generatePageNameFromLabel: (label) => {
       return label
     },
@@ -32,8 +33,15 @@ module.exports = (options) => {
 
   options = extend(true, defaults, options)
 
+  function isJumpLink(pageName) {
+    return String(pageName).charAt(0) === '#'
+  }
+
   function isAbsolute(pageName) {
-    return options.makeAllLinksAbsolute || pageName.charCodeAt(0) === 0x2F/* / */
+    return (
+      options.makeAllLinksAbsolute ||
+      pageName.charCodeAt(0) === 0x2f /* / */
+    )
   }
 
   function removeInitialSlashes(str) {
@@ -66,7 +74,10 @@ module.exports = (options) => {
         return match.input
       }
 
-      if (isAbsolute(pageName)) {
+      if (isJumpLink(pageName)) {
+        href = pageName + options.uriSuffix
+      }
+      else if (isAbsolute(pageName)) {
         pageName = removeInitialSlashes(pageName)
         href = options.baseURL + pageName + options.uriSuffix
       }
@@ -75,7 +86,7 @@ module.exports = (options) => {
       }
       href = utils.escape(href)
 
-      htmlAttrs.push(`href="${href}"`)
+      htmlAttrs.push(`${options.hrefAttribute}="${href}"`)
       for (let attrName in options.htmlAttributes) {
         const attrValue = options.htmlAttributes[attrName]
         htmlAttrs.push(`${attrName}="${attrValue}"`)
