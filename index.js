@@ -7,12 +7,14 @@ const sanitize = require('sanitize-filename')
 module.exports = (options) => {
 
   const defaults = {
+    linkPattern: /\[\[([-\w\s/]+)(\|([-\w\s/]+))?\]\]/,
     baseURL: '/',
     relativeBaseURL: './',
     makeAllLinksAbsolute: false,
     uriSuffix: '.html',
     htmlAttributes: {
     },
+    htmlTag: 'a',
     generatePageNameFromLabel: (label) => {
       return label
     },
@@ -39,7 +41,7 @@ module.exports = (options) => {
   }
 
   return Plugin(
-    /\[\[([^|\]\n]+)(\|([^\]\n]+))?\]\]/,
+    options.linkPattern,
     (match, utils) => {
       let label = ''
       let pageName = ''
@@ -80,7 +82,7 @@ module.exports = (options) => {
       }
       htmlAttrsString = htmlAttrs.join(' ')
 
-      return `<a ${htmlAttrsString}>${label}</a>`
+      return `<${htmlTag} ${htmlAttrsString}>${label}</${htmlTag}>`
     }
   )
 }
