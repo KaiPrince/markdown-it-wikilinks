@@ -59,7 +59,7 @@ module.exports = (options) => {
       const isSplit = !!match[3]
       if (isSplit) {
         label = match[3]
-        pageName = match[1]
+        pageName = options.generatePageNameFromLabel(match[1])
       }
       else {
         label = match[1]
